@@ -180,7 +180,7 @@ knitr::kable(category_performance, digits = 2,
              caption = "Category performance ranked by total revenue")
 ```
 
-Interpretation: “Technology” generates the highest total revenue (\$836,154) and profit (\$145,454.95), despite selling the fewest units. “Furniture” ranks second in revenue but produces the lowest total profit (\$18,451.27), showing that higher revenue does not necessarily mean higher profit. “Office Supplies” sells the most units (22,906) and earns the second-highest total profit. “Technology” also has the highest mean profit per order line (\$78.75) and standard deviation (\$428.82), indicating substantial variation in profitability.
+Interpretation: “Technology” generates the highest total revenue (\$836,154) and profit (\$145,454.95), despite selling the least units. “Furniture” ranks second in revenue but produces the lowest total profit (\$18,451.27), showing that higher revenue does not necessarily mean higher profits. “Office Supplies” sells the most units (22,906) and earns the second-highest total profit. “Technology” also has the highest mean profit per order line (\$78.75) and standard deviation (\$428.82), indicating large amounts of variation in profitability.
 
 ```{r}
 # Reorder the category summary to identify the most profitable categories.
@@ -190,6 +190,8 @@ category_profit_ranking <- category_performance |>
 knitr::kable(category_profit_ranking, digits = 2,
              caption = "Category performance ranked by total profit")
 ```
+
+Interpretation: “Technology” generates the highest total profit (\$145,454.95), followed by “Office Supplies” (\$122,490.80) and “Furniture” (\$18,451.27). Although “Furniture” earns more revenue than “Office Supplies,” it produces much less profit. “Technology” also has the highest mean and median profit per order line, but its large standard deviation (\$428.82) indicates a higher variation in profit amounts. These results show that selling more units or generating more revenue does not necessarily mean higher total profit.
 
 ```{r}
 # Compare more specific product groups, such as chairs and phones.
@@ -206,6 +208,8 @@ subcategory_performance <- superstore |>
 knitr::kable(subcategory_performance, digits = 2,
              caption = "Subcategories ranked by total profit")
 ```
+
+Interpretation: “Copiers” generate the highest total profit (\$55,617.82), followed by “Phones” and “Accessories”, which are all within “Technology.” Although “Phones” earns the most revenue (\$330,007.05), “Copiers” produces more profit with substantially less revenue. “Tables”, “Bookcases", and “Supplies” have negative total profits, with “Tables” recording the largest loss (\$17,725.48) despite generating \$206,965.53 in revenue. These results show that higher sales revenue does not necessarily mean profitability.
 
 ```{r}
 # Summarize individual products using their IDs and names.
@@ -226,6 +230,8 @@ knitr::kable(top_revenue_products, digits = 2,
              caption = "Top 10 products by total revenue")
 ```
 
+Interpretation: The “Canon imageCLASS 2200 Advanced Copier” generates the most revenue (\$61,599.82) and the highest profit among these products (\$25,199.93), despite selling only 20 units. However, three of the top 10 revenue-generating products record losses, including “Cisco TelePresence System EX90 Videoconferencing Unit”, which earns \$22,638.48 in revenue but loses \$1,811.08. “HON 5400 Series Task Chairs for Big and Tall” breaks even despite generating \$21,870.58 in revenue. This shows that high-revenue products are not necessarily profitable.
+
 ```{r}
 # Select the 10 products with the highest total profit.
 top_profit_products <- product_performance |>
@@ -234,6 +240,7 @@ top_profit_products <- product_performance |>
 knitr::kable(top_profit_products, digits = 2,
              caption = "Top 10 products by total profit")
 ```
+Interpretation: The “Canon imageCLASS 2200 Advanced Copier” generates the highest total profit (\$25,199.93), which is more than three times that of the next item: the “Fellowes PB500 Electric Punch Plastic Comb Binding Machine with Manual Bind” (\$7,753.04). Selling more units does not necessarily produce higher total profits... The “Hewlett Packard LaserJet 3310 Copier” sold 38 units but earned less profit than the number one ranked product, which sold 20. The rankings show substantial differences in how much individual products contribute to overall profit.
 
 ```{r}
 # Calculate total profit for each category-region combination.
@@ -252,3 +259,4 @@ category_region_profit <- superstore |>
 knitr::kable(category_region_profit, digits = 2,
              caption = "Total profit by category and region")
 ```
+Interpretation: “Technology” generates the highest total profit in the “Central”, “East”, and “South” regions, while “Office Supplies” leads in the “West” region. The most profitable combination is “Office Supplies” in the “West” region (\$52,609.85). “Furniture” produces the lowest profit in every region and records a loss of \$2,871.05 in the “Central” region. These results show that profitability varies across both product categories and regions.
