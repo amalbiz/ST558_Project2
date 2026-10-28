@@ -5,23 +5,81 @@ format: html
 editor: visual
 ---
 
-## Quarto
+# Project Introduction
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+This project is using the US Superstore Data from this [Kaggle](https://www.kaggle.com/datasets/juhi1994/superstore) data set. I picked this data set because an customer choices and online shopping has become an interest of mine since more and more people prefer online shopping to traditional, brick-and-mortar physical store shopping.
 
-## Running Code
+This document explores the US Superstore data and looks at how sales, profits, and discounts vary across product categories, customer segments, and regions. This Quarto Document will later be converted into a Shiny App!
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# Setup
 
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this
+These are the packages I will need.
 
 ```{r}
-#| echo: false
-2 * 2
+library(tidyverse)
+library(readxl)
+library(janitor)
+
+theme_set(theme_minimal(base_size = 12))
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Reading data set and doing some pre-processing...
+
+```{r}
+data_path <- "US Superstore data.xls"
+superstore <- read_excel(data_path, sheet = "Orders") |>
+  clean_names() |>
+  mutate(
+    order_date = as.Date(order_date),
+    ship_date = as.Date(ship_date),
+    postal_code = stringr::str_pad(as.character(postal_code), 5, pad = "0")
+  )
+
+glimpse(superstore)
+```
+
+Summary of the data set and checking for duplicate or missing values...
+
+```{r}
+superstore |>
+  summarise(
+    order_lines = n(),
+    unique_orders = n_distinct(order_id),
+    first_order = min(order_date),
+    last_order = max(order_date),
+    duplicate_row_ids = n() - n_distinct(row_id)
+  ) |>
+  knitr::kable(caption = "Dataset size and date coverage")
+
+superstore |>
+  summarise(across(everything(), ~ sum(is.na(.x)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "missing") |>
+  knitr::kable(caption = "Missing values by variable")
+```
+
+# Categorical summaries
+
+## One-way contingency table
+
+```{r}
+category_counts <- superstore |>
+  count(category, name = "order_lines") |>
+  mutate(percent = 100 * order_lines / sum(order_lines))
+
+knitr::kable(category_counts, digits = 1,
+             caption = "Order-line counts and percentages by category")
+```
+
+Interpretation: 'Office Supplies' has the most order lines which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn't mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost. We would have to investigate this further.
+
+## Two-way contingency table
+
+```{r}
+category_region <- with(superstore, table(category, region))
+knitr::kable(addmargins(category_region),
+             caption = "Order-line counts by category and region")
+
+knitr::kable(100 * prop.table(category_region, margin = 2), digits = 1,
+             caption = "Category percentages within each region")
+```
+Interpretation:
