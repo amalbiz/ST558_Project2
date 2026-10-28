@@ -59,9 +59,10 @@ superstore |>
 
 # Categorical summaries
 
-## One-way contingency table
+## One-way contingency tables
 
 ```{r}
+# Count order lines and calculate percentages for each product category.
 category_counts <- superstore |>
   count(category, name = "order_lines") |>
   mutate(percent = 100 * order_lines / sum(order_lines))
@@ -70,16 +71,184 @@ knitr::kable(category_counts, digits = 1,
              caption = "Order-line counts and percentages by category")
 ```
 
-Interpretation: 'Office Supplies' has the most order lines which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn't mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost. We would have to investigate this further.
-
-## Two-way contingency table
+Interpretation: 'Office Supplies' has the highest percentage of order lines which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn't mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost.
 
 ```{r}
-category_region <- with(superstore, table(category, region))
-knitr::kable(addmargins(category_region),
-             caption = "Order-line counts by category and region")
+# Count order lines and calculate percentages for each customer segment.
+segment_counts <- superstore |>
+  count(segment, name = "order_lines") |>
+  mutate(percent = 100 * order_lines / sum(order_lines))
 
-knitr::kable(100 * prop.table(category_region, margin = 2), digits = 1,
-             caption = "Category percentages within each region")
+knitr::kable(segment_counts, digits = 1,
+             caption = "Order-line counts and percentages by customer segment")
 ```
-Interpretation:
+
+Interpretation: The "Consumer" customer segment has the highest number of order lines (and thus percentage of order lines) which indicates that regular consumers are ordering the most from this store. However, the "Corporate" and "Home Office" categories could be spending more money but have less overall order lines...
+
+```{r}
+# Count order lines and calculate percentages for each region.
+region_counts <- superstore |>
+  count(region, name = "order_lines") |>
+  mutate(percent = 100 * order_lines / sum(order_lines))
+
+knitr::kable(region_counts, digits = 1,
+             caption = "Order-line counts and percentages by region")
+```
+
+Interpretation: It looks like the "West" region has the highest number of orders (and thus percentage of orders) compared to the "Central", "East", and "South" regions! The website must have a strong consumer base from the "West" region, or it could be that there are more people in general in the "West" region...
+
+## Two-way contingency tables
+
+```{r}
+# Count order lines for each category-region combination.
+# Reshape the table so regions appear as columns.
+category_region_counts <- superstore |>
+  count(category, region, name = "order_lines") |>
+  pivot_wider(
+    names_from = region,
+    values_from = order_lines,
+    values_fill = 0
+  )
+
+knitr::kable(category_region_counts,
+             caption = "Order-line counts by category and region")
+```
+
+Interpretation: "Office Supplies" has the most order lines in every region, followed by "Furniture" and then "Technology". The "West" region has the most order lines overall, while the "South" region has the least. The largest category-region combination is "Office Supplies" in the "West" region, with 1,897 order lines. And the smallest is "Technology" in the "South" region, with 293. These counts show purchasing activity, but do not concretely indicate which categories generate the most revenue...
+
+```{r}
+# Count order lines for each category-segment combination.
+category_segment_counts <- superstore |>
+  count(category, segment, name = "order_lines") |>
+  pivot_wider(
+    names_from = segment,
+    values_from = order_lines,
+    values_fill = 0
+  )
+
+knitr::kable(category_segment_counts,
+             caption = "Order-line counts by category and customer segment")
+```
+
+Interpretation: "Office Supplies" has the most order lines across all customer segments, followed by "Furniture" and "Technology". The "Consumer" category accounts for the most order lines in every category, while the "Home Office" category customers account for the least. The largest combination is "Consumer" purchases of "Office Supplies", with 3,127 order lines. These counts show purchasing frequency, but do not concretely indicate which categories generate the most revenue...
+
+```{r}
+# Classify each order line as profitable, a loss, or break-even.
+# Count these outcomes within each product category.
+category_profit_counts <- superstore |>
+  mutate(
+    profit_status = case_when(
+      is.na(profit) ~ "Missing",
+      profit > 0 ~ "Profit",
+      profit < 0 ~ "Loss",
+      TRUE ~ "Break-even"
+    )
+  ) |>
+  count(category, profit_status, name = "order_lines") |>
+  pivot_wider(
+    names_from = profit_status,
+    values_from = order_lines,
+    values_fill = 0
+  )
+
+knitr::kable(category_profit_counts,
+             caption = "Order-line counts by category and profit status")
+```
+
+Interpretation: All three categories have more order lines classified as “Profit” than “Loss” or “Break-even”. “Office Supplies” has the most profitable order lines (5,111), but “Technology” has the highest proportion of profitable order lines, at approximately 85.2%. “Furniture” has the highest proportion of loss-making lines, approximately 33.7%. These counts describe how often order lines are profitable, but do not show the total dollar amount of profit or loss.
+
+## Revenue and profit summaries
+
+```{r}
+# These are numerical summaries, not contingency tables.
+# Treat sales as revenue and rank categories by total revenue.
+# Means, medians, and standard deviations describe profit per order line.
+category_performance <- superstore |>
+  group_by(category) |>
+  summarise(
+    units_sold = sum(quantity),
+    total_revenue = sum(sales),
+    total_profit = sum(profit),
+    mean_profit = mean(profit),
+    median_profit = median(profit),
+    sd_profit = sd(profit),
+    .groups = "drop"
+  ) |>
+  arrange(desc(total_revenue))
+
+knitr::kable(category_performance, digits = 2,
+             caption = "Category performance ranked by total revenue")
+```
+
+Interpretation: “Technology” generates the highest total revenue (\$836,154) and profit (\$145,454.95), despite selling the fewest units. “Furniture” ranks second in revenue but produces the lowest total profit (\$18,451.27), showing that higher revenue does not necessarily mean higher profit. “Office Supplies” sells the most units (22,906) and earns the second-highest total profit. “Technology” also has the highest mean profit per order line (\$78.75) and standard deviation (\$428.82), indicating substantial variation in profitability.
+
+```{r}
+# Reorder the category summary to identify the most profitable categories.
+category_profit_ranking <- category_performance |>
+  arrange(desc(total_profit))
+
+knitr::kable(category_profit_ranking, digits = 2,
+             caption = "Category performance ranked by total profit")
+```
+
+```{r}
+# Compare more specific product groups, such as chairs and phones.
+# Rank subcategories from highest to lowest total profit.
+subcategory_performance <- superstore |>
+  group_by(category, sub_category) |>
+  summarise(
+    total_revenue = sum(sales),
+    total_profit = sum(profit),
+    .groups = "drop"
+  ) |>
+  arrange(desc(total_profit))
+
+knitr::kable(subcategory_performance, digits = 2,
+             caption = "Subcategories ranked by total profit")
+```
+
+```{r}
+# Summarize individual products using their IDs and names.
+product_performance <- superstore |>
+  group_by(product_id, product_name) |>
+  summarise(
+    units_sold = sum(quantity),
+    total_revenue = sum(sales),
+    total_profit = sum(profit),
+    .groups = "drop"
+  )
+
+# Select the 10 products with the highest total revenue.
+top_revenue_products <- product_performance |>
+  slice_max(total_revenue, n = 10, with_ties = FALSE)
+
+knitr::kable(top_revenue_products, digits = 2,
+             caption = "Top 10 products by total revenue")
+```
+
+```{r}
+# Select the 10 products with the highest total profit.
+top_profit_products <- product_performance |>
+  slice_max(total_profit, n = 10, with_ties = FALSE)
+
+knitr::kable(top_profit_products, digits = 2,
+             caption = "Top 10 products by total profit")
+```
+
+```{r}
+# Calculate total profit for each category-region combination.
+# This summarizes dollar amounts rather than counts.
+category_region_profit <- superstore |>
+  group_by(category, region) |>
+  summarise(
+    total_profit = sum(profit),
+    .groups = "drop"
+  ) |>
+  pivot_wider(
+    names_from = region,
+    values_from = total_profit
+  )
+
+knitr::kable(category_region_profit, digits = 2,
+             caption = "Total profit by category and region")
+```
