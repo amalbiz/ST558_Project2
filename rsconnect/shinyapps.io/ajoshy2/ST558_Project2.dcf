@@ -1,0 +1,12 @@
+name: ST558_Project2
+title: ST558_Project2
+username: ajoshy2
+account: ajoshy2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 18310199
+bundleId: 12753148
+url: https://ajoshy2.shinyapps.io/ST558_Project2/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
