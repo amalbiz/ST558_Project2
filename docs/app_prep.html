@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AMJ">
+
+<title>Shiny App Preparation EDA</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Shiny App Preparation EDA</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AMJ </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="project-introduction" class="level1">
+<h1>Project Introduction</h1>
+<p>This project is using the US Superstore Data from this <a href="https://www.kaggle.com/datasets/juhi1994/superstore">Kaggle</a> data set. I picked this data set because an customer choices and online shopping has become an interest of mine since more and more people prefer online shopping to traditional, brick-and-mortar physical store shopping.</p>
+<p>This document explores the US Superstore data and looks at how sales, profits, and discounts vary across product categories, customer segments, and regions. This Quarto Document will later be converted into a Shiny App!</p>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<p>These are the packages I will need.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tibble' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'stringr' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readxl' was built under R version 4.5.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'janitor' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Reading data set and doing some pre-processing…</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data_path <span class="ot">&lt;-</span> <span class="st">"US Superstore data.xls"</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>superstore <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(data_path, <span class="at">sheet =</span> <span class="st">"Orders"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">order_date =</span> <span class="fu">as.Date</span>(order_date),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ship_date =</span> <span class="fu">as.Date</span>(ship_date),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">postal_code =</span> stringr<span class="sc">::</span><span class="fu">str_pad</span>(<span class="fu">as.character</span>(postal_code), <span class="dv">5</span>, <span class="at">pad =</span> <span class="st">"0"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L2236 / R2236C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L5276 / R5276C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L8800 / R8800C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9148 / R9148C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9149 / R9149C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9150 / R9150C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9388 / R9388C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9389 / R9389C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9390 / R9390C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9391 / R9391C12: '05408'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Coercing text to numeric in L9743 / R9743C12: '05408'</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here, I can see the structure of the data set.</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(superstore)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 9,994
+Columns: 21
+$ row_id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…
+$ order_id      &lt;chr&gt; "CA-2016-152156", "CA-2016-152156", "CA-2016-138688", "U…
+$ order_date    &lt;date&gt; 2016-11-08, 2016-11-08, 2016-06-12, 2015-10-11, 2015-10…
+$ ship_date     &lt;date&gt; 2016-11-11, 2016-11-11, 2016-06-16, 2015-10-18, 2015-10…
+$ ship_mode     &lt;chr&gt; "Second Class", "Second Class", "Second Class", "Standar…
+$ customer_id   &lt;chr&gt; "CG-12520", "CG-12520", "DV-13045", "SO-20335", "SO-2033…
+$ customer_name &lt;chr&gt; "Claire Gute", "Claire Gute", "Darrin Van Huff", "Sean O…
+$ segment       &lt;chr&gt; "Consumer", "Consumer", "Corporate", "Consumer", "Consum…
+$ country       &lt;chr&gt; "United States", "United States", "United States", "Unit…
+$ city          &lt;chr&gt; "Henderson", "Henderson", "Los Angeles", "Fort Lauderdal…
+$ state         &lt;chr&gt; "Kentucky", "Kentucky", "California", "Florida", "Florid…
+$ postal_code   &lt;chr&gt; "42420", "42420", "90036", "33311", "33311", "90032", "9…
+$ region        &lt;chr&gt; "South", "South", "West", "South", "South", "West", "Wes…
+$ product_id    &lt;chr&gt; "FUR-BO-10001798", "FUR-CH-10000454", "OFF-LA-10000240",…
+$ category      &lt;chr&gt; "Furniture", "Furniture", "Office Supplies", "Furniture"…
+$ sub_category  &lt;chr&gt; "Bookcases", "Chairs", "Labels", "Tables", "Storage", "F…
+$ product_name  &lt;chr&gt; "Bush Somerset Collection Bookcase", "Hon Deluxe Fabric …
+$ sales         &lt;dbl&gt; 261.9600, 731.9400, 14.6200, 957.5775, 22.3680, 48.8600,…
+$ quantity      &lt;dbl&gt; 2, 3, 2, 5, 2, 7, 4, 6, 3, 5, 9, 4, 3, 3, 5, 3, 6, 2, 2,…
+$ discount      &lt;dbl&gt; 0.00, 0.00, 0.00, 0.45, 0.20, 0.00, 0.00, 0.20, 0.20, 0.…
+$ profit        &lt;dbl&gt; 41.9136, 219.5820, 6.8714, -383.0310, 2.5164, 14.1694, 1…</code></pre>
+</div>
+</div>
+<p>Next, I’m going to create a summary of the data set and checking for duplicate or missing values…</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>superstore <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">order_lines =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">unique_orders =</span> <span class="fu">n_distinct</span>(order_id),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_order =</span> <span class="fu">min</span>(order_date),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_order =</span> <span class="fu">max</span>(order_date),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">duplicate_row_ids =</span> <span class="fu">n</span>() <span class="sc">-</span> <span class="fu">n_distinct</span>(row_id)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Dataset size and date coverage"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Dataset size and date coverage</caption>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 20%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">order_lines</th>
+<th style="text-align: right;">unique_orders</th>
+<th style="text-align: left;">first_order</th>
+<th style="text-align: left;">last_order</th>
+<th style="text-align: right;">duplicate_row_ids</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">9994</td>
+<td style="text-align: right;">5009</td>
+<td style="text-align: left;">2014-01-03</td>
+<td style="text-align: left;">2017-12-30</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>superstore <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(.x)))) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"missing"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Missing values by variable"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Missing values by variable</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">variable</th>
+<th style="text-align: right;">missing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">row_id</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">order_id</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">order_date</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ship_date</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ship_mode</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">customer_id</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">customer_name</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">segment</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">city</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">state</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">postal_code</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">region</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">product_id</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">category</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sub_category</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">product_name</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sales</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">quantity</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">discount</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">profit</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Looks like no missing or duplicate values… Perfect! # Categorical summaries</p>
+<section id="one-way-contingency-tables" class="level2">
+<h2 class="anchored" data-anchor-id="one-way-contingency-tables">One-way contingency tables</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count order lines and calculate percentages for each product category.</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>category_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(category, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> order_lines <span class="sc">/</span> <span class="fu">sum</span>(order_lines))</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_counts, <span class="at">digits =</span> <span class="dv">1</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts and percentages by category"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts and percentages by category</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">order_lines</th>
+<th style="text-align: right;">percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">2121</td>
+<td style="text-align: right;">21.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">6026</td>
+<td style="text-align: right;">60.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">1847</td>
+<td style="text-align: right;">18.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: ‘Office Supplies’ has the highest percentage of order lines, which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn’t mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count order lines and calculate percentages for each customer segment.</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>segment_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(segment, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> order_lines <span class="sc">/</span> <span class="fu">sum</span>(order_lines))</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(segment_counts, <span class="at">digits =</span> <span class="dv">1</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts and percentages by customer segment"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts and percentages by customer segment</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">segment</th>
+<th style="text-align: right;">order_lines</th>
+<th style="text-align: right;">percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Consumer</td>
+<td style="text-align: right;">5191</td>
+<td style="text-align: right;">51.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corporate</td>
+<td style="text-align: right;">3020</td>
+<td style="text-align: right;">30.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Home Office</td>
+<td style="text-align: right;">1783</td>
+<td style="text-align: right;">17.8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: The “Consumer” customer segment has the highest number of order lines (and thus percentage of order lines) which indicates that regular consumers are ordering the most from this store. However, the “Corporate” and “Home Office” categories could be spending more money but have less overall order lines…</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count order lines and calculate percentages for each region.</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>region_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(region, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> order_lines <span class="sc">/</span> <span class="fu">sum</span>(order_lines))</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(region_counts, <span class="at">digits =</span> <span class="dv">1</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts and percentages by region"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts and percentages by region</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">region</th>
+<th style="text-align: right;">order_lines</th>
+<th style="text-align: right;">percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Central</td>
+<td style="text-align: right;">2323</td>
+<td style="text-align: right;">23.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">East</td>
+<td style="text-align: right;">2848</td>
+<td style="text-align: right;">28.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">South</td>
+<td style="text-align: right;">1620</td>
+<td style="text-align: right;">16.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">West</td>
+<td style="text-align: right;">3203</td>
+<td style="text-align: right;">32.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: It looks like the “West” region has the highest number of order lines (and thus percentage of orders) compared to the “Central”, “East”, and “South” regions! The website must have a strong consumer base from the “West” region, or it could be that there are more people in general in the “West” region…</p>
+</section>
+<section id="two-way-contingency-tables" class="level2">
+<h2 class="anchored" data-anchor-id="two-way-contingency-tables">Two-way contingency tables</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count order lines for each category-region combination.</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the table so regions appear as columns.</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>category_region_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(category, region, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> region,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> order_lines,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_region_counts,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts by category and region"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts by category and region</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">Central</th>
+<th style="text-align: right;">East</th>
+<th style="text-align: right;">South</th>
+<th style="text-align: right;">West</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">481</td>
+<td style="text-align: right;">601</td>
+<td style="text-align: right;">332</td>
+<td style="text-align: right;">707</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">1422</td>
+<td style="text-align: right;">1712</td>
+<td style="text-align: right;">995</td>
+<td style="text-align: right;">1897</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">420</td>
+<td style="text-align: right;">535</td>
+<td style="text-align: right;">293</td>
+<td style="text-align: right;">599</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Office Supplies” has the most order lines in every region, followed by “Furniture” and then “Technology”. The “West” region has the most order lines overall, while the “South” region has the least. The largest category-region combination is “Office Supplies” in the “West” region, with 1,897 order lines. And the smallest is “Technology” in the “South” region, with 293. These counts show purchasing activity, but do not concretely indicate which categories generate the most revenue…</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count order lines for each category-segment combination.</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>category_segment_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(category, segment, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> segment,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> order_lines,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_segment_counts,</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts by category and customer segment"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts by category and customer segment</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">Consumer</th>
+<th style="text-align: right;">Corporate</th>
+<th style="text-align: right;">Home Office</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">1113</td>
+<td style="text-align: right;">646</td>
+<td style="text-align: right;">362</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">3127</td>
+<td style="text-align: right;">1820</td>
+<td style="text-align: right;">1079</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">951</td>
+<td style="text-align: right;">554</td>
+<td style="text-align: right;">342</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Office Supplies” has the most order lines across all customer segments, followed by “Furniture” and “Technology”. The “Consumer” category accounts for the most order lines in every category, while the “Home Office” category customers account for the least. The largest combination is “Consumer” purchases of “Office Supplies”, with 3,127 order lines. These counts show purchasing frequency, but do not concretely indicate which categories generate the most revenue…</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Classify each order line as profitable, a loss, or break-even.</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Count these outcomes within each product category.</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>category_profit_counts <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">profit_status =</span> <span class="fu">case_when</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(profit) <span class="sc">~</span> <span class="st">"Missing"</span>,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      profit <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Profit"</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>      profit <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Loss"</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Break-even"</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(category, profit_status, <span class="at">name =</span> <span class="st">"order_lines"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> profit_status,</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> order_lines,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_profit_counts,</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Order-line counts by category and profit status"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Order-line counts by category and profit status</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">Break-even</th>
+<th style="text-align: right;">Loss</th>
+<th style="text-align: right;">Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">714</td>
+<td style="text-align: right;">1374</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">886</td>
+<td style="text-align: right;">5111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">271</td>
+<td style="text-align: right;">1573</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: All three categories have more order lines classified as “Profit” than “Loss” or “Break-even”. “Office Supplies” has the most profitable order lines (5,111), but “Technology” has the highest proportion of profitable order lines, at approximately 85.2%. “Furniture” has the highest proportion of loss-making lines, approximately 33.7%. These counts describe how often order lines are profitable, but do not show the total dollar amount of profit or loss.</p>
+</section>
+<section id="revenue-and-profit-summaries" class="level2">
+<h2 class="anchored" data-anchor-id="revenue-and-profit-summaries">Revenue and profit summaries</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Means, medians, and standard deviations describe profit per order line.</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>category_performance <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">units_sold =</span> <span class="fu">sum</span>(quantity),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_revenue =</span> <span class="fu">sum</span>(sales),</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_profit =</span> <span class="fu">sum</span>(profit),</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_profit =</span> <span class="fu">mean</span>(profit),</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_profit =</span> <span class="fu">median</span>(profit),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_profit =</span> <span class="fu">sd</span>(profit),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_revenue))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_performance, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Category performance ranked by total revenue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Category performance ranked by total revenue</caption>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">units_sold</th>
+<th style="text-align: right;">total_revenue</th>
+<th style="text-align: right;">total_profit</th>
+<th style="text-align: right;">mean_profit</th>
+<th style="text-align: right;">median_profit</th>
+<th style="text-align: right;">sd_profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">6939</td>
+<td style="text-align: right;">836154.0</td>
+<td style="text-align: right;">145454.95</td>
+<td style="text-align: right;">78.75</td>
+<td style="text-align: right;">25.02</td>
+<td style="text-align: right;">428.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">8028</td>
+<td style="text-align: right;">741999.8</td>
+<td style="text-align: right;">18451.27</td>
+<td style="text-align: right;">8.70</td>
+<td style="text-align: right;">7.77</td>
+<td style="text-align: right;">136.05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">22906</td>
+<td style="text-align: right;">719047.0</td>
+<td style="text-align: right;">122490.80</td>
+<td style="text-align: right;">20.33</td>
+<td style="text-align: right;">6.88</td>
+<td style="text-align: right;">164.89</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Technology” generates the highest total revenue ($836,154) and profit ($145,454.95), despite selling the least units. “Furniture” ranks second in revenue but produces the lowest total profit ($18,451.27), showing that higher revenue does not necessarily mean higher profits. “Office Supplies” sells the most units (22,906) and earns the second-highest total profit. “Technology” also has the highest mean profit per order line ($78.75) and standard deviation ($428.82), indicating large amounts of variation in profitability.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare sales amounts per order line across product categories.</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>sales_summary <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category) <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sales =</span> <span class="fu">mean</span>(sales),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_sales =</span> <span class="fu">median</span>(sales),</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sales =</span> <span class="fu">sd</span>(sales),</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(sales_summary, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Sales per order line by category"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Sales per order line by category</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">mean_sales</th>
+<th style="text-align: right;">median_sales</th>
+<th style="text-align: right;">sd_sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">349.83</td>
+<td style="text-align: right;">182.22</td>
+<td style="text-align: right;">503.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">119.32</td>
+<td style="text-align: right;">27.42</td>
+<td style="text-align: right;">382.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">452.71</td>
+<td style="text-align: right;">166.16</td>
+<td style="text-align: right;">1108.66</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Technology” has the highest mean sales per order line ($452.71) and the greatest variability, while “Furniture” has the highest median ($182.22). “Office Supplies” has the lowest mean and median sales. In all categories, means exceed medians, suggesting they are right-skewed distributions with some unusually large sales.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the category summary to identify the most profitable categories.</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>category_profit_ranking <span class="ot">&lt;-</span> category_performance <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_profit))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_profit_ranking, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Category performance ranked by total profit"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Category performance ranked by total profit</caption>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">units_sold</th>
+<th style="text-align: right;">total_revenue</th>
+<th style="text-align: right;">total_profit</th>
+<th style="text-align: right;">mean_profit</th>
+<th style="text-align: right;">median_profit</th>
+<th style="text-align: right;">sd_profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">6939</td>
+<td style="text-align: right;">836154.0</td>
+<td style="text-align: right;">145454.95</td>
+<td style="text-align: right;">78.75</td>
+<td style="text-align: right;">25.02</td>
+<td style="text-align: right;">428.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">22906</td>
+<td style="text-align: right;">719047.0</td>
+<td style="text-align: right;">122490.80</td>
+<td style="text-align: right;">20.33</td>
+<td style="text-align: right;">6.88</td>
+<td style="text-align: right;">164.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">8028</td>
+<td style="text-align: right;">741999.8</td>
+<td style="text-align: right;">18451.27</td>
+<td style="text-align: right;">8.70</td>
+<td style="text-align: right;">7.77</td>
+<td style="text-align: right;">136.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Technology” generates the highest total profit ($145,454.95), followed by “Office Supplies” ($122,490.80) and “Furniture” ($18,451.27). Although “Furniture” earns more revenue than “Office Supplies,” it produces much less profit. “Technology” also has the highest mean and median profit per order line, but its large standard deviation ($428.82) indicates a higher variation in profit amounts. These results show that selling more units or generating more revenue does not necessarily mean higher total profit.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare more specific product groups, such as chairs and phones.</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank subcategories from highest to lowest total profit.</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>subcategory_performance <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category, sub_category) <span class="sc">|&gt;</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_revenue =</span> <span class="fu">sum</span>(sales),</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_profit =</span> <span class="fu">sum</span>(profit),</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_profit))</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(subcategory_performance, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Subcategories ranked by total profit"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Subcategories ranked by total profit</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: left;">sub_category</th>
+<th style="text-align: right;">total_revenue</th>
+<th style="text-align: right;">total_profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: left;">Copiers</td>
+<td style="text-align: right;">149528.03</td>
+<td style="text-align: right;">55617.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: left;">Phones</td>
+<td style="text-align: right;">330007.05</td>
+<td style="text-align: right;">44515.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: left;">Accessories</td>
+<td style="text-align: right;">167380.32</td>
+<td style="text-align: right;">41936.64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Paper</td>
+<td style="text-align: right;">78479.21</td>
+<td style="text-align: right;">34053.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Binders</td>
+<td style="text-align: right;">203412.73</td>
+<td style="text-align: right;">30221.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: left;">Chairs</td>
+<td style="text-align: right;">328449.10</td>
+<td style="text-align: right;">26590.17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Storage</td>
+<td style="text-align: right;">223843.61</td>
+<td style="text-align: right;">21278.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Appliances</td>
+<td style="text-align: right;">107532.16</td>
+<td style="text-align: right;">18138.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: left;">Furnishings</td>
+<td style="text-align: right;">91705.16</td>
+<td style="text-align: right;">13059.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Envelopes</td>
+<td style="text-align: right;">16476.40</td>
+<td style="text-align: right;">6964.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Art</td>
+<td style="text-align: right;">27118.79</td>
+<td style="text-align: right;">6527.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Labels</td>
+<td style="text-align: right;">12486.31</td>
+<td style="text-align: right;">5546.25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: left;">Machines</td>
+<td style="text-align: right;">189238.63</td>
+<td style="text-align: right;">3384.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Fasteners</td>
+<td style="text-align: right;">3024.28</td>
+<td style="text-align: right;">949.52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: left;">Supplies</td>
+<td style="text-align: right;">46673.54</td>
+<td style="text-align: right;">-1189.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: left;">Bookcases</td>
+<td style="text-align: right;">114880.00</td>
+<td style="text-align: right;">-3472.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: left;">Tables</td>
+<td style="text-align: right;">206965.53</td>
+<td style="text-align: right;">-17725.48</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Copiers” generate the highest total profit ($55,617.82), followed by “Phones” and “Accessories”, which are all within “Technology.” Although “Phones” earns the most revenue ($330,007.05), “Copiers” produces more profit with substantially less revenue. “Tables”, “Bookcases”, and “Supplies” have negative total profits, with “Tables” recording the largest loss ($17,725.48) despite generating $206,965.53 in revenue. These results show that higher sales revenue does not necessarily mean profitability.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize individual products using their IDs and names.</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>product_performance <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(product_id, product_name) <span class="sc">|&gt;</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">units_sold =</span> <span class="fu">sum</span>(quantity),</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_revenue =</span> <span class="fu">sum</span>(sales),</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_profit =</span> <span class="fu">sum</span>(profit),</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the 10 products with the highest total revenue.</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>top_revenue_products <span class="ot">&lt;-</span> product_performance <span class="sc">|&gt;</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total_revenue, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(top_revenue_products, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Top 10 products by total revenue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Top 10 products by total revenue</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 58%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">product_id</th>
+<th style="text-align: left;">product_name</th>
+<th style="text-align: right;">units_sold</th>
+<th style="text-align: right;">total_revenue</th>
+<th style="text-align: right;">total_profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TEC-CO-10004722</td>
+<td style="text-align: left;">Canon imageCLASS 2200 Advanced Copier</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">61599.82</td>
+<td style="text-align: right;">25199.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OFF-BI-10003527</td>
+<td style="text-align: left;">Fellowes PB500 Electric Punch Plastic Comb Binding Machine with Manual Bind</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">27453.38</td>
+<td style="text-align: right;">7753.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TEC-MA-10002412</td>
+<td style="text-align: left;">Cisco TelePresence System EX90 Videoconferencing Unit</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">22638.48</td>
+<td style="text-align: right;">-1811.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FUR-CH-10002024</td>
+<td style="text-align: left;">HON 5400 Series Task Chairs for Big and Tall</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">21870.58</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OFF-BI-10001359</td>
+<td style="text-align: left;">GBC DocuBind TL300 Electric Binding System</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">19823.48</td>
+<td style="text-align: right;">2233.51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OFF-BI-10000545</td>
+<td style="text-align: left;">GBC Ibimaster 500 Manual ProClick Binding System</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">19024.50</td>
+<td style="text-align: right;">760.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TEC-CO-10001449</td>
+<td style="text-align: left;">Hewlett Packard LaserJet 3310 Copier</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">18839.69</td>
+<td style="text-align: right;">6983.88</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TEC-MA-10001127</td>
+<td style="text-align: left;">HP Designjet T520 Inkjet Large Format Printer - 24” Color</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">18374.90</td>
+<td style="text-align: right;">4094.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OFF-BI-10004995</td>
+<td style="text-align: left;">GBC DocuBind P400 Electric Binding System</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">17965.07</td>
+<td style="text-align: right;">-1878.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OFF-SU-10000151</td>
+<td style="text-align: left;">High Speed Automatic Electric Letter Opener</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17030.31</td>
+<td style="text-align: right;">-262.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: The “Canon imageCLASS 2200 Advanced Copier” generates the most revenue ($61,599.82) and the highest profit among these products ($25,199.93), despite selling only 20 units. However, three of the top 10 revenue-generating products record losses, including “Cisco TelePresence System EX90 Videoconferencing Unit”, which earns $22,638.48 in revenue but loses $1,811.08. “HON 5400 Series Task Chairs for Big and Tall” breaks even despite generating $21,870.58 in revenue. This shows that high-revenue products are not necessarily profitable.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the 10 products with the highest total profit.</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>top_profit_products <span class="ot">&lt;-</span> product_performance <span class="sc">|&gt;</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total_profit, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(top_profit_products, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Top 10 products by total profit"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Top 10 products by total profit</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 58%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">product_id</th>
+<th style="text-align: left;">product_name</th>
+<th style="text-align: right;">units_sold</th>
+<th style="text-align: right;">total_revenue</th>
+<th style="text-align: right;">total_profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TEC-CO-10004722</td>
+<td style="text-align: left;">Canon imageCLASS 2200 Advanced Copier</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">61599.82</td>
+<td style="text-align: right;">25199.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OFF-BI-10003527</td>
+<td style="text-align: left;">Fellowes PB500 Electric Punch Plastic Comb Binding Machine with Manual Bind</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">27453.38</td>
+<td style="text-align: right;">7753.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TEC-CO-10001449</td>
+<td style="text-align: left;">Hewlett Packard LaserJet 3310 Copier</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">18839.69</td>
+<td style="text-align: right;">6983.88</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TEC-CO-10003763</td>
+<td style="text-align: left;">Canon PC1060 Personal Laser Copier</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">11619.83</td>
+<td style="text-align: right;">4570.93</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TEC-MA-10001127</td>
+<td style="text-align: left;">HP Designjet T520 Inkjet Large Format Printer - 24” Color</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">18374.90</td>
+<td style="text-align: right;">4094.98</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TEC-MA-10003979</td>
+<td style="text-align: left;">Ativa V4110MDD Micro-Cut Shredder</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7699.89</td>
+<td style="text-align: right;">3772.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TEC-MA-10001047</td>
+<td style="text-align: left;">3D Systems Cube Printer, 2nd Generation, Magenta</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">14299.89</td>
+<td style="text-align: right;">3717.97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TEC-AC-10002049</td>
+<td style="text-align: left;">Plantronics Savi W720 Multi-Device Wireless Headset System</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">9367.29</td>
+<td style="text-align: right;">3696.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OFF-BI-10001120</td>
+<td style="text-align: left;">Ibico EPK-21 Electric Binding System</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">15875.92</td>
+<td style="text-align: right;">3345.28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TEC-MA-10000045</td>
+<td style="text-align: left;">Zebra ZM400 Thermal Label Printer</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6965.70</td>
+<td style="text-align: right;">3343.54</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: The “Canon imageCLASS 2200 Advanced Copier” generates the highest total profit ($25,199.93), which is more than three times that of the next item: the “Fellowes PB500 Electric Punch Plastic Comb Binding Machine with Manual Bind” ($7,753.04). Selling more units does not necessarily produce higher total profits… The “Hewlett Packard LaserJet 3310 Copier” sold 38 units but earned less profit than the number one ranked product, which sold 20. The rankings show substantial differences in how much individual products contribute to overall profit.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate total profit for each category-region combination.</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This summarizes dollar amounts rather than counts.</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>category_region_profit <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category, region) <span class="sc">|&gt;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_profit =</span> <span class="fu">sum</span>(profit),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> region,</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> total_profit</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(category_region_profit, <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Total profit by category and region"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Total profit by category and region</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: right;">Central</th>
+<th style="text-align: right;">East</th>
+<th style="text-align: right;">South</th>
+<th style="text-align: right;">West</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Furniture</td>
+<td style="text-align: right;">-2871.05</td>
+<td style="text-align: right;">3046.17</td>
+<td style="text-align: right;">6771.21</td>
+<td style="text-align: right;">11504.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office Supplies</td>
+<td style="text-align: right;">8879.98</td>
+<td style="text-align: right;">41014.58</td>
+<td style="text-align: right;">19986.39</td>
+<td style="text-align: right;">52609.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technology</td>
+<td style="text-align: right;">33697.43</td>
+<td style="text-align: right;">47462.04</td>
+<td style="text-align: right;">19991.83</td>
+<td style="text-align: right;">44303.65</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Interpretation: “Technology” generates the highest total profit in the “Central”, “East”, and “South” regions, while “Office Supplies” leads in the “West” region. The most profitable combination is “Office Supplies” in the “West” region ($52,609.85). “Furniture” produces the lowest profit in every region and records a loss of $2,871.05 in the “Central” region. These results show that profitability varies across both product categories and regions.</p>
+</section>
+</section>
+<section id="graphical-exploration" class="level1">
+<h1>Graphical exploration</h1>
+<section id="plot-1-bar-chart-of-category-counts" class="level2">
+<h2 class="anchored" data-anchor-id="plot-1-bar-chart-of-category-counts">Plot 1: Bar chart of category counts</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(superstore, <span class="fu">aes</span>(<span class="at">x =</span> category)) <span class="sc">+</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"navyblue"</span>) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Order lines by product category"</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Product category"</span>, <span class="at">y =</span> <span class="st">"Number of order lines"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: The “Office Supplies” bar sits way above the rest at around ~6,000 order lines, while the “Technology” and “Furniture” categories are at similar frequencies, sitting at ~2,000 order lines each. “Office Supplies” make up the bulk of what customers purchase.</p>
+</section>
+<section id="plot-2-side-by-side-bar-chart-by-region-and-category" class="level2">
+<h2 class="anchored" data-anchor-id="plot-2-side-by-side-bar-chart-by-region-and-category">Plot 2: Side-by-side bar chart by region and category</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(superstore, <span class="fu">aes</span>(<span class="at">x =</span> region, <span class="at">fill =</span> category)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Product-category counts across regions"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Region"</span>, <span class="at">y =</span> <span class="st">"Number of order lines"</span>, <span class="at">fill =</span> <span class="st">"Category"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: “Office Supplies” has the most order lines in every region, followed by “Furniture” and “Technology”. The “West” region has the highest counts across all categories, while the “South” region has the lowest, with a similar category mix across regions.</p>
+</section>
+<section id="plot-3-faceted-histogram-of-sales" class="level2">
+<h2 class="anchored" data-anchor-id="plot-3-faceted-histogram-of-sales">Plot 3: Faceted histogram of sales</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All sales values in this workbook are positive, so a log scale can be used.</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The shared axes help compare panels. Raw counts also reflect category size.</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(superstore, <span class="fu">aes</span>(<span class="at">x =</span> sales)) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"navyblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_dollar</span>()) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> category, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sales distributions by product category"</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Logarithmic sales axis; bins have equal width in log10 sales"</span>,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Sales per order line (USD, log scale)"</span>,</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of order lines"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: “Office Supplies” order lines generally have lower sales amounts, while “Furniture” and “Technology” tend to have higher sales per order line. “Office Supplies” also has the most observations, explaining its taller bars. The logarithmic scale compresses large sales values, making distributions across a wide range of amounts easier to compare.</p>
+</section>
+<section id="plot-4-box-plot-of-profit-by-category" class="level2">
+<h2 class="anchored" data-anchor-id="plot-4-box-plot-of-profit-by-category">Plot 4: Box plot of profit by category</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(superstore, <span class="fu">aes</span>(<span class="at">x =</span> category, <span class="at">y =</span> profit)) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"turquoise"</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_dollar</span>()) <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Profit per order line by product category"</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Product category"</span>, <span class="at">y =</span> <span class="st">"Profit per order line (USD)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: “Technology” has the highest median profit per order line and the widest spread in the middle 50% of values. “Office Supplies” has a lower median and the smallest spread, while “Furniture” has a median slightly above zero and a box extending into losses (Q1 to median region).</p>
+</section>
+<section id="plot-5-scatter-plot-of-discount-and-profit" class="level2">
+<h2 class="anchored" data-anchor-id="plot-5-scatter-plot-of-discount-and-profit">Plot 5: Scatter plot of discount and profit</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(superstore, <span class="fu">aes</span>(<span class="at">x =</span> discount, <span class="at">y =</span> profit, <span class="at">color =</span> category)) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_dollar</span>()) <span class="sc">+</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Discount and profit across product categories"</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Discount"</span>, <span class="at">y =</span> <span class="st">"Profit per order line (USD)"</span>, <span class="at">color =</span> <span class="st">"Category"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: Higher discounts generally coincide with lower profit and more losses, while the largest profits occur at low or zero discounts. “Technology” shows the most extreme profits and losses. This suggests a negative association between discount and profit, but we cannot establish this relationship for sure.</p>
+</section>
+<section id="plot-6-heatmap-of-mean-profit-by-category-and-region" class="level2">
+<h2 class="anchored" data-anchor-id="plot-6-heatmap-of-mean-profit-by-category-and-region">Plot 6: Heatmap of mean profit by category and region</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>profit_by_group <span class="ot">&lt;-</span> superstore <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(category, region) <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_profit =</span> <span class="fu">mean</span>(profit, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(profit_by_group, <span class="fu">aes</span>(<span class="at">x =</span> region, <span class="at">y =</span> category, <span class="at">fill =</span> mean_profit)) <span class="sc">+</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">dollar</span>(mean_profit, <span class="at">accuracy =</span> <span class="fl">0.01</span>)),</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">3.5</span>) <span class="sc">+</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"yellow"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"orange"</span>,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_dollar</span>()) <span class="sc">+</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean order-line profit by category and region"</span>,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Region"</span>, <span class="at">y =</span> <span class="st">"Product category"</span>, <span class="at">fill =</span> <span class="st">"Mean profit (USD)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="app_prep_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretation: “Technology” has the highest mean profit per order line in every region, peaking at $88.71 in the “East” region. “Furniture” in the “Central” region has the lowest mean, a loss of $5.97 per order line. These values represent average rather than total profit, and it’s good to note that unusually large profits or losses can influence the means.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,5 +1,5 @@
 ---
-title: "app_prep"
+title: "Shiny App Preparation EDA"
 author: "AMJ"
 format: html
 editor: visual
@@ -34,12 +34,11 @@ superstore <- read_excel(data_path, sheet = "Orders") |>
     ship_date = as.Date(ship_date),
     postal_code = stringr::str_pad(as.character(postal_code), 5, pad = "0")
   )
-
+# Here, I can see the structure of the data set.
 glimpse(superstore)
 ```
 
-Summary of the data set and checking for duplicate or missing values...
-
+Next, I'm going to create a summary of the data set and checking for duplicate or missing values...
 ```{r}
 superstore |>
   summarise(
@@ -56,7 +55,7 @@ superstore |>
   pivot_longer(everything(), names_to = "variable", values_to = "missing") |>
   knitr::kable(caption = "Missing values by variable")
 ```
-
+Looks like no missing or duplicate values... Perfect!
 # Categorical summaries
 
 ## One-way contingency tables
@@ -71,7 +70,7 @@ knitr::kable(category_counts, digits = 1,
              caption = "Order-line counts and percentages by category")
 ```
 
-Interpretation: 'Office Supplies' has the highest percentage of order lines which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn't mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost.
+Interpretation: 'Office Supplies' has the highest percentage of order lines, which suggests that the majority of customers are looking to purchase different types of office supplies. However, this doesn't mean that office supply sales generate the most revenue/profit since furniture and technology products are usually higher in cost.
 
 ```{r}
 # Count order lines and calculate percentages for each customer segment.
@@ -82,7 +81,6 @@ segment_counts <- superstore |>
 knitr::kable(segment_counts, digits = 1,
              caption = "Order-line counts and percentages by customer segment")
 ```
-
 Interpretation: The "Consumer" customer segment has the highest number of order lines (and thus percentage of order lines) which indicates that regular consumers are ordering the most from this store. However, the "Corporate" and "Home Office" categories could be spending more money but have less overall order lines...
 
 ```{r}
@@ -94,8 +92,7 @@ region_counts <- superstore |>
 knitr::kable(region_counts, digits = 1,
              caption = "Order-line counts and percentages by region")
 ```
-
-Interpretation: It looks like the "West" region has the highest number of orders (and thus percentage of orders) compared to the "Central", "East", and "South" regions! The website must have a strong consumer base from the "West" region, or it could be that there are more people in general in the "West" region...
+Interpretation: It looks like the "West" region has the highest number of order lines (and thus percentage of orders) compared to the "Central", "East", and "South" regions! The website must have a strong consumer base from the "West" region, or it could be that there are more people in general in the "West" region...
 
 ## Two-way contingency tables
 
@@ -113,7 +110,6 @@ category_region_counts <- superstore |>
 knitr::kable(category_region_counts,
              caption = "Order-line counts by category and region")
 ```
-
 Interpretation: "Office Supplies" has the most order lines in every region, followed by "Furniture" and then "Technology". The "West" region has the most order lines overall, while the "South" region has the least. The largest category-region combination is "Office Supplies" in the "West" region, with 1,897 order lines. And the smallest is "Technology" in the "South" region, with 293. These counts show purchasing activity, but do not concretely indicate which categories generate the most revenue...
 
 ```{r}
@@ -129,7 +125,6 @@ category_segment_counts <- superstore |>
 knitr::kable(category_segment_counts,
              caption = "Order-line counts by category and customer segment")
 ```
-
 Interpretation: "Office Supplies" has the most order lines across all customer segments, followed by "Furniture" and "Technology". The "Consumer" category accounts for the most order lines in every category, while the "Home Office" category customers account for the least. The largest combination is "Consumer" purchases of "Office Supplies", with 3,127 order lines. These counts show purchasing frequency, but do not concretely indicate which categories generate the most revenue...
 
 ```{r}
@@ -154,14 +149,11 @@ category_profit_counts <- superstore |>
 knitr::kable(category_profit_counts,
              caption = "Order-line counts by category and profit status")
 ```
-
 Interpretation: All three categories have more order lines classified as “Profit” than “Loss” or “Break-even”. “Office Supplies” has the most profitable order lines (5,111), but “Technology” has the highest proportion of profitable order lines, at approximately 85.2%. “Furniture” has the highest proportion of loss-making lines, approximately 33.7%. These counts describe how often order lines are profitable, but do not show the total dollar amount of profit or loss.
 
 ## Revenue and profit summaries
 
 ```{r}
-# These are numerical summaries, not contingency tables.
-# Treat sales as revenue and rank categories by total revenue.
 # Means, medians, and standard deviations describe profit per order line.
 category_performance <- superstore |>
   group_by(category) |>
@@ -179,8 +171,23 @@ category_performance <- superstore |>
 knitr::kable(category_performance, digits = 2,
              caption = "Category performance ranked by total revenue")
 ```
-
 Interpretation: “Technology” generates the highest total revenue (\$836,154) and profit (\$145,454.95), despite selling the least units. “Furniture” ranks second in revenue but produces the lowest total profit (\$18,451.27), showing that higher revenue does not necessarily mean higher profits. “Office Supplies” sells the most units (22,906) and earns the second-highest total profit. “Technology” also has the highest mean profit per order line (\$78.75) and standard deviation (\$428.82), indicating large amounts of variation in profitability.
+
+```{r}
+# Compare sales amounts per order line across product categories.
+sales_summary <- superstore |>
+  group_by(category) |>
+  summarise(
+    mean_sales = mean(sales),
+    median_sales = median(sales),
+    sd_sales = sd(sales),
+    .groups = "drop"
+  )
+
+knitr::kable(sales_summary, digits = 2,
+             caption = "Sales per order line by category")
+```
+Interpretation: “Technology” has the highest mean sales per order line (\$452.71) and the greatest variability, while “Furniture” has the highest median (\$182.22). “Office Supplies” has the lowest mean and median sales. In all categories, means exceed medians, suggesting they are right-skewed distributions with some unusually large sales.
 
 ```{r}
 # Reorder the category summary to identify the most profitable categories.
@@ -190,7 +197,6 @@ category_profit_ranking <- category_performance |>
 knitr::kable(category_profit_ranking, digits = 2,
              caption = "Category performance ranked by total profit")
 ```
-
 Interpretation: “Technology” generates the highest total profit (\$145,454.95), followed by “Office Supplies” (\$122,490.80) and “Furniture” (\$18,451.27). Although “Furniture” earns more revenue than “Office Supplies,” it produces much less profit. “Technology” also has the highest mean and median profit per order line, but its large standard deviation (\$428.82) indicates a higher variation in profit amounts. These results show that selling more units or generating more revenue does not necessarily mean higher total profit.
 
 ```{r}
@@ -208,7 +214,6 @@ subcategory_performance <- superstore |>
 knitr::kable(subcategory_performance, digits = 2,
              caption = "Subcategories ranked by total profit")
 ```
-
 Interpretation: “Copiers” generate the highest total profit (\$55,617.82), followed by “Phones” and “Accessories”, which are all within “Technology.” Although “Phones” earns the most revenue (\$330,007.05), “Copiers” produces more profit with substantially less revenue. “Tables”, “Bookcases", and “Supplies” have negative total profits, with “Tables” recording the largest loss (\$17,725.48) despite generating \$206,965.53 in revenue. These results show that higher sales revenue does not necessarily mean profitability.
 
 ```{r}
@@ -229,7 +234,6 @@ top_revenue_products <- product_performance |>
 knitr::kable(top_revenue_products, digits = 2,
              caption = "Top 10 products by total revenue")
 ```
-
 Interpretation: The “Canon imageCLASS 2200 Advanced Copier” generates the most revenue (\$61,599.82) and the highest profit among these products (\$25,199.93), despite selling only 20 units. However, three of the top 10 revenue-generating products record losses, including “Cisco TelePresence System EX90 Videoconferencing Unit”, which earns \$22,638.48 in revenue but loses \$1,811.08. “HON 5400 Series Task Chairs for Big and Tall” breaks even despite generating \$21,870.58 in revenue. This shows that high-revenue products are not necessarily profitable.
 
 ```{r}
@@ -260,3 +264,88 @@ knitr::kable(category_region_profit, digits = 2,
              caption = "Total profit by category and region")
 ```
 Interpretation: “Technology” generates the highest total profit in the “Central”, “East”, and “South” regions, while “Office Supplies” leads in the “West” region. The most profitable combination is “Office Supplies” in the “West” region (\$52,609.85). “Furniture” produces the lowest profit in every region and records a loss of \$2,871.05 in the “Central” region. These results show that profitability varies across both product categories and regions.
+
+# Graphical exploration
+
+## Plot 1: Bar chart of category counts
+
+```{r}
+ggplot(superstore, aes(x = category)) +
+  geom_bar(fill = "navyblue") +
+  labs(title = "Order lines by product category",
+       x = "Product category", y = "Number of order lines")
+```
+
+Interpretation: The "Office Supplies" bar sits way above the rest at around ~6,000 order lines, while the "Technology" and "Furniture" categories are at similar frequencies, sitting at ~2,000 order lines each. "Office Supplies" make up the bulk of what customers purchase.
+
+## Plot 2: Side-by-side bar chart by region and category
+
+```{r}
+ggplot(superstore, aes(x = region, fill = category)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Product-category counts across regions",
+       x = "Region", y = "Number of order lines", fill = "Category")
+```
+
+Interpretation: “Office Supplies” has the most order lines in every region, followed by “Furniture” and “Technology”. The “West” region has the highest counts across all categories, while the “South” region has the lowest, with a similar category mix across regions.
+
+## Plot 3: Faceted histogram of sales
+
+```{r}
+# All sales values in this workbook are positive, so a log scale can be used.
+# The shared axes help compare panels. Raw counts also reflect category size.
+ggplot(superstore, aes(x = sales)) +
+  geom_histogram(bins = 30, fill = "navyblue", color = "white") +
+  scale_x_log10(labels = scales::label_dollar()) +
+  facet_wrap(~ category, ncol = 1) +
+  labs(title = "Sales distributions by product category",
+       subtitle = "Logarithmic sales axis; bins have equal width in log10 sales",
+       x = "Sales per order line (USD, log scale)",
+       y = "Number of order lines")
+```
+Interpretation: “Office Supplies” order lines generally have lower sales amounts, while “Furniture” and “Technology” tend to have higher sales per order line. “Office Supplies” also has the most observations, explaining its taller bars. The logarithmic scale compresses large sales values, making distributions across a wide range of amounts easier to compare.
+
+## Plot 4: Box plot of profit by category
+
+```{r}
+ggplot(superstore, aes(x = category, y = profit)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
+  geom_boxplot(fill = "turquoise", outlier.alpha = 0.25) +
+  scale_y_continuous(labels = scales::label_dollar()) + coord_cartesian(ylim = c(-100, 200)) +
+  labs(title = "Profit per order line by product category",
+       x = "Product category", y = "Profit per order line (USD)")
+```
+
+Interpretation: “Technology” has the highest median profit per order line and the widest spread in the middle 50% of values. “Office Supplies” has a lower median and the smallest spread, while “Furniture” has a median slightly above zero and a box extending into losses (Q1 to median region).
+
+## Plot 5: Scatter plot of discount and profit
+
+```{r}
+ggplot(superstore, aes(x = discount, y = profit, color = category)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
+  geom_point(alpha = 0.25, size = 1) +
+  scale_x_continuous(labels = scales::label_percent()) +
+  scale_y_continuous(labels = scales::label_dollar()) +
+  labs(title = "Discount and profit across product categories",
+       x = "Discount", y = "Profit per order line (USD)", color = "Category")
+```
+
+Interpretation: Higher discounts generally coincide with lower profit and more losses, while the largest profits occur at low or zero discounts. “Technology” shows the most extreme profits and losses. This suggests a negative association between discount and profit, but we cannot establish this relationship for sure.
+
+## Plot 6: Heatmap of mean profit by category and region
+
+```{r}
+profit_by_group <- superstore |>
+  group_by(category, region) |>
+  summarise(mean_profit = mean(profit, na.rm = TRUE), .groups = "drop")
+
+ggplot(profit_by_group, aes(x = region, y = category, fill = mean_profit)) +
+  geom_tile(color = "white", linewidth = 1) +
+  geom_text(aes(label = scales::dollar(mean_profit, accuracy = 0.01)),
+            color = "black", size = 3.5) +
+  scale_fill_gradient2(low = "yellow", mid = "white", high = "orange",
+                       midpoint = 0, labels = scales::label_dollar()) +
+  labs(title = "Mean order-line profit by category and region",
+       x = "Region", y = "Product category", fill = "Mean profit (USD)")
+```
+Interpretation: “Technology” has the highest mean profit per order line in every region, peaking at \$88.71 in the “East” region. “Furniture” in the “Central” region has the lowest mean, a loss of $5.97 per order line. These values represent average rather than total profit, and it's good to note that unusually large profits or losses can influence the means.
