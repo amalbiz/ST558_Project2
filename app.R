@@ -84,7 +84,7 @@ ui <- fluidPage(
         selected = "About",
         tabPanel(
           "About",
-          h3("Explore sales, profit, and purchasing activity"),
+          h3("Explore sales, profit, and purchasing activity!"),
           p("Compare product categories, customer segments, and regions using tables and graphs based on the accompanying exploratory Quarto document."),
           tags$figure(
             class = "centerFigure",
@@ -202,7 +202,7 @@ ui <- fluidPage(
                 )
               ),
               withSpinner(plotOutput("exploration_plot", height = "650px")),
-              helpText("To reproduce the QMD: histogram = Sales with a log axis and Category facets; box plot = Profit by Category with zoom; scatter = Discount vs Profit colored by Category; heatmap = mean Profit by Category and Region.")
+              
             )
           )
         )
